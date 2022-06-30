@@ -2,8 +2,8 @@ name: Create package on push to master
 
 on:
   push:
-    branches:
-      - main
+    tags:
+      - v**
 
 jobs:
   build:
@@ -18,8 +18,19 @@ jobs:
           distribution: 'adopt' # Value of the distributionManagement/repository/id field of the pom.xml
           settings-path: ${{ github.workspace }} # location for the settings.xml file
 
+      - name: Get tag
+        id: tag
+        uses: dawidd6/action-get-tag@v1
+        with:
+          # Optionally strip `v` prefix
+          strip_v: true
+      - name: Use tag
+        run: echo ${{steps.tag.outputs.tag}}
+
       - name: Build with Gradle
         run: gradle :mmob-client-android:build
+        env:
+          VERSION_NUMBER: ${{steps.tag.outputs.tag}}
 
       - name: Publish to GitHub Packages Apache Maven
         run: gradle :mmob-client-android:publish

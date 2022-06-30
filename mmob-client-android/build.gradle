@@ -57,7 +57,7 @@ afterEvaluate {
                 
                 // Replace with the name of your library
                 artifactId 'mmob-client-android'
-                version '0.0.1'
+                version System.getenv('VERSION_NUMBER')
             }
             
 
