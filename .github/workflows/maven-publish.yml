@@ -29,10 +29,9 @@ jobs:
 
       - name: Build with Gradle
         run: gradle :mmob-client-android:build
-        env:
-          VERSION_NUMBER: ${{steps.tag.outputs.tag}}
 
       - name: Publish to GitHub Packages Apache Maven
         run: gradle :mmob-client-android:publish
         env:
           MAVEN_REPOSITORY_TOKEN: ${{ secrets.MAVEN_REPOSITORY_TOKEN }}
+          VERSION_NUMBER: ${{steps.tag.outputs.tag}}
