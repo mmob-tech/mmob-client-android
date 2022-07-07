@@ -1,24 +1,40 @@
 package com.mmob.mmobclient
 
+import android.content.Context
 import android.webkit.WebView
 import android.webkit.WebViewClient
-import kotlinx.serialization.Serializable
 import java.net.URLEncoder
 import kotlin.reflect.full.memberProperties
 
 typealias MmobView = WebView
 
-class MmobClient(private var mmobView: MmobView) {
+class MmobClient(private var mmobView: MmobView, private val context: Context) {
     fun loadIntegration(integration: MmobIntegrationConfiguration, customerInfo: MmobCustomerInfo) {
         val data = "&${encodeIntegrationConfiguration(integration)}&customer_info${encodeCustomerInfo(customerInfo)}"
 
-        startWebView(mmobView, "https://marketplace.mmobstars.com/boot", data)
+        startWebView(mmobView, getUrl(integration.environment), data)
     }
 
     fun loadDistribution(distribution: MmobDistribution, customerInfo: MmobCustomerInfo) {
         val data = "configuration${encodeDistributionConfiguration(distribution)}&customer_info${encodeCustomerInfo(customerInfo)}"
 
-        startWebView(mmobView, "https://marketplace.mmobstars.com/tpp/distribution/boot", data)
+        startWebView(mmobView, getUrl(distribution.distribution.environment, "tpp/distribution/boot"), data)
+    }
+
+    private fun getUrl(environment: String, suffix: String = "boot"): String {
+        val localUrl = "http://localhost:3100/$suffix"
+        val devUrl = "https://client-ingress.dev.mmob.com/$suffix"
+        val stagUrl = "https://client-ingress.stag.mmob.com/$suffix"
+        val prodUrl = "https://client-ingress.prod.mmob.com/$suffix"
+
+        return when (environment) {
+            "local" -> localUrl
+            "dev" -> devUrl
+            "stag" -> stagUrl
+            else -> {
+                prodUrl
+            }
+        }
     }
 
     private fun encodeIntegrationConfiguration(integration: MmobIntegrationConfiguration): String {
@@ -43,6 +59,9 @@ class MmobClient(private var mmobView: MmobView) {
                 queryStringArray.add(query)
             }
         }
+
+        queryStringArray.add("[identifier_type]=android")
+        queryStringArray.add("[identifier_value]=${context.packageName}")
 
         return queryStringArray.joinToString("&configuration")
     }
@@ -72,21 +91,36 @@ class MmobClient(private var mmobView: MmobView) {
         mmobView.postUrl(url, data.toByteArray())
     }
 
-    @Serializable
-    data class MmobIntegrationConfiguration(val cp_id: String, val cp_deployment_id: String, val environment: String = "production") {
+    data class MmobIntegrationConfiguration(
+        val cp_id: String,
+        val cp_deployment_id: String,
+        val environment: String = "production"
+    ) {
     }
 
-    @Serializable
-    data class MmobDistribution(val distribution: Configuration) {
-        @Serializable
-        data class Configuration(val distribution_id: String, val environment: String = "production", val identifier_value: String, val identifier_type: String) {
+    data class MmobDistribution(
+        val distribution: Configuration) {
+        data class Configuration(
+            val distribution_id: String,
+            val environment: String = "production"
+        ) {
         }
     }
 
-    @Serializable
-    data class MmobCustomerInfo(val customerInfo: Configuration) {
-        @Serializable
-        data class Configuration(val email: String, val first_name: String, val surname: String, val gender: String, val title: String, val building_number: String, val address_1: String, val town_city: String, val postcode: String, val dob: String) {
+    data class MmobCustomerInfo(
+        val customerInfo: Configuration) {
+        data class Configuration(
+            val email: String? = null,
+            val first_name: String? = null,
+            val surname: String? = null,
+            val gender: String? = null,
+            val title: String? = null,
+            val building_number: String? = null,
+            val address_1: String? = null,
+            val town_city: String? = null,
+            val postcode: String? = null,
+            val dob: String? = null
+        ) {
         }
     }
 }
