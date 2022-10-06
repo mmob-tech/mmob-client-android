@@ -9,23 +9,26 @@ import kotlin.reflect.full.memberProperties
 typealias MmobView = WebView
 
 class MmobClient(private var mmobView: MmobView, private val context: Context) {
-    fun loadIntegration(integration: MmobIntegrationConfiguration, customerInfo: MmobCustomerInfo) {
+    fun loadIntegration(integration: MmobIntegrationConfiguration, customerInfo: MmobCustomerInfo, network: String ) {
         val data = "&${encodeIntegrationConfiguration(integration)}&customer_info${encodeCustomerInfo(customerInfo)}"
 
-        startWebView(mmobView, getUrl(integration.environment), data)
+        startWebView(mmobView, getUrl(integration.environment, network), data)
     }
 
-    fun loadDistribution(distribution: MmobDistribution, customerInfo: MmobCustomerInfo) {
+    fun loadDistribution(distribution: MmobDistribution, customerInfo: MmobCustomerInfo, network: String) {
         val data = "configuration${encodeDistributionConfiguration(distribution)}&customer_info${encodeCustomerInfo(customerInfo)}"
 
-        startWebView(mmobView, getUrl(distribution.distribution.environment, "tpp/distribution/boot"), data)
+        startWebView(mmobView, getUrl(distribution.distribution.environment, network, "tpp/distribution/boot"), data)
     }
 
-    private fun getUrl(environment: String, suffix: String = "boot"): String {
+    private fun getUrl(environment: String, network:String  , suffix: String = "boot"): String {
+
+        val networkEnvironment = if (network === "efNetwork") "ef-network.com" else "mmob.com"
+
         val localUrl = "http://localhost:3100/$suffix"
-        val devUrl = "https://client-ingress.dev.mmob.com/$suffix"
-        val stagUrl = "https://client-ingress.stag.mmob.com/$suffix"
-        val prodUrl = "https://client-ingress.prod.mmob.com/$suffix"
+        val devUrl = "https://client-ingress.dev.$networkEnvironment/$suffix"
+        val stagUrl = "https://client-ingress.stag.$networkEnvironment/$suffix"
+        val prodUrl = "https://client-ingress.prod.$networkEnvironment/$suffix"
 
         return when (environment) {
             "local" -> localUrl
@@ -123,5 +126,6 @@ class MmobClient(private var mmobView: MmobView, private val context: Context) {
         ) {
         }
     }
+
 }
 
