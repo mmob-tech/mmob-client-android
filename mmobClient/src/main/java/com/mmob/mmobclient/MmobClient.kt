@@ -8,24 +8,24 @@ import kotlin.reflect.full.memberProperties
 
 typealias MmobView = WebView
 
-class MmobClient(private var mmobView: MmobView, private val context: Context) {
+class MmobClient(private val mmobView: MmobView, private val context: Context, private val instanceDomain: String = "mmob") {
     fun loadIntegration(integration: MmobIntegrationConfiguration, customerInfo: MmobCustomerInfo) {
         val data = "&${encodeIntegrationConfiguration(integration)}&customer_info${encodeCustomerInfo(customerInfo)}"
 
-        startWebView(mmobView, getUrl(integration.environment), data)
+        startWebView(mmobView, getUrl(integration.environment, instanceDomain), data)
     }
 
     fun loadDistribution(distribution: MmobDistribution, customerInfo: MmobCustomerInfo) {
         val data = "configuration${encodeDistributionConfiguration(distribution)}&customer_info${encodeCustomerInfo(customerInfo)}"
 
-        startWebView(mmobView, getUrl(distribution.distribution.environment, "tpp/distribution/boot"), data)
+        startWebView(mmobView, getUrl(distribution.distribution.environment, instanceDomain, "tpp/distribution/boot"), data)
     }
 
-    private fun getUrl(environment: String, suffix: String = "boot"): String {
+    private fun getUrl(environment: String, instanceDomain: String, suffix: String = "boot"): String {
         val localUrl = "http://localhost:3100/$suffix"
-        val devUrl = "https://client-ingress.dev.mmob.com/$suffix"
-        val stagUrl = "https://client-ingress.stag.mmob.com/$suffix"
-        val prodUrl = "https://client-ingress.prod.mmob.com/$suffix"
+        val devUrl = "https://client-ingress.dev.$instanceDomain.com/$suffix"
+        val stagUrl = "https://client-ingress.stag.$instanceDomain.com/$suffix"
+        val prodUrl = "https://client-ingress.prod.$instanceDomain.com/$suffix"
 
         return when (environment) {
             "local" -> localUrl
