@@ -123,6 +123,5 @@ class MmobClient(private val mmobView: MmobView, private val context: Context, p
         ) {
         }
     }
-
 }
 
