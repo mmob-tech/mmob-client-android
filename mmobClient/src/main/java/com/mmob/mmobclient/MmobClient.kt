@@ -12,7 +12,6 @@ import com.google.common.net.InternetDomainName
 import java.net.URLEncoder
 import kotlin.reflect.full.memberProperties
 
-
 typealias MmobView = WebView
 
 class MmobClient(
@@ -117,7 +116,7 @@ class MmobClient(
         webSettings.javaScriptEnabled = true
 
         // Force links and redirects to open in the WebView instead of in a browser
-        mmobView.webViewClient = MMOBWebViewClient(mmobView.context, instanceDomain)
+        mmobView.webViewClient = MmobViewClient(mmobView.context, instanceDomain)
 
         // Post data to url
         mmobView.postUrl(url, data.toByteArray())
@@ -178,15 +177,15 @@ class MmobClient(
     }
 }
 
-private class MMOBWebViewClient(private val context: Context, private val instanceDomain: String) :
+private class MmobViewClient(private val context: Context, private val instanceDomain: String) :
     WebViewClient() {
     @Deprecated("shouldOverrideUrlLoading is deprecated, providing support for older versions of Android")
-    override fun shouldOverrideUrlLoading(view: MmobView?, url: String?): Boolean {
+    override fun shouldOverrideUrlLoading(view: MmobView?, url: String): Boolean {
         return handleUri(Uri.parse(url))
     }
 
     @TargetApi(Build.VERSION_CODES.N)
-    override fun shouldOverrideUrlLoading(view: WebView?, request: WebResourceRequest): Boolean {
+    override fun shouldOverrideUrlLoading(view: MmobView?, request: WebResourceRequest): Boolean {
         return handleUri(request.url)
     }
 
