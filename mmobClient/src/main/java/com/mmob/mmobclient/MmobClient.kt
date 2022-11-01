@@ -15,20 +15,36 @@ import kotlin.reflect.full.memberProperties
 
 typealias MmobView = WebView
 
-class MmobClient(private val mmobView: MmobView, private val context: Context, private val instanceDomain: String = "mmob.com") {
+class MmobClient(
+    private val mmobView: MmobView,
+    private val context: Context,
+    private val instanceDomain: String = "mmob.com"
+) {
     fun loadIntegration(integration: MmobIntegrationConfiguration, customerInfo: MmobCustomerInfo) {
-        val data = "&${encodeIntegrationConfiguration(integration)}&customer_info${encodeCustomerInfo(customerInfo)}"
+        val data = "&${encodeIntegrationConfiguration(integration)}&customer_info${
+            encodeCustomerInfo(customerInfo)
+        }"
 
         startWebView(mmobView, getUrl(integration.environment, instanceDomain), data)
     }
 
     fun loadDistribution(distribution: MmobDistribution, customerInfo: MmobCustomerInfo) {
-        val data = "configuration${encodeDistributionConfiguration(distribution)}&customer_info${encodeCustomerInfo(customerInfo)}"
+        val data = "configuration${encodeDistributionConfiguration(distribution)}&customer_info${
+            encodeCustomerInfo(customerInfo)
+        }"
 
-        startWebView(mmobView, getUrl(distribution.distribution.environment, instanceDomain, "tpp/distribution/boot"), data)
+        startWebView(
+            mmobView,
+            getUrl(distribution.distribution.environment, instanceDomain, "tpp/distribution/boot"),
+            data
+        )
     }
 
-    private fun getUrl(environment: String, instanceDomain: String, suffix: String = "boot"): String {
+    private fun getUrl(
+        environment: String,
+        instanceDomain: String,
+        suffix: String = "boot"
+    ): String {
         val localUrl = "http://localhost:3100/$suffix"
         val devUrl = "https://client-ingress.dev.$instanceDomain/$suffix"
         val stagUrl = "https://client-ingress.stag.$instanceDomain/$suffix"
@@ -49,7 +65,8 @@ class MmobClient(private val mmobView: MmobView, private val context: Context, p
 
         for (prop in MmobIntegrationConfiguration::class.memberProperties) {
             if (prop.get(integration) != null) {
-                val query = "${prop.name}=${URLEncoder.encode(prop.get(integration).toString(), "UTF-8")}"
+                val query =
+                    "${prop.name}=${URLEncoder.encode(prop.get(integration).toString(), "UTF-8")}"
                 queryStringArray.add(query)
             }
         }
@@ -62,7 +79,11 @@ class MmobClient(private val mmobView: MmobView, private val context: Context, p
 
         for (prop in MmobDistribution.Configuration::class.memberProperties) {
             if (prop.get(distribution.distribution) != null) {
-                val query = "[${prop.name}]=${URLEncoder.encode(prop.get(distribution.distribution).toString(), "UTF-8")}"
+                val query = "[${prop.name}]=${
+                    URLEncoder.encode(
+                        prop.get(distribution.distribution).toString(), "UTF-8"
+                    )
+                }"
                 queryStringArray.add(query)
             }
         }
@@ -78,7 +99,11 @@ class MmobClient(private val mmobView: MmobView, private val context: Context, p
 
         for (prop in MmobCustomerInfo.Configuration::class.memberProperties) {
             if (prop.get(customerInfo.customerInfo) != null) {
-                val query = "[${prop.name}]=${URLEncoder.encode(prop.get(customerInfo.customerInfo).toString(), "UTF-8")}"
+                val query = "[${prop.name}]=${
+                    URLEncoder.encode(
+                        prop.get(customerInfo.customerInfo).toString(), "UTF-8"
+                    )
+                }"
                 queryStringArray.add(query)
             }
         }
@@ -105,7 +130,8 @@ class MmobClient(private val mmobView: MmobView, private val context: Context, p
     )
 
     data class MmobDistribution(
-        val distribution: Configuration) {
+        val distribution: Configuration
+    ) {
         data class Configuration(
             val distribution_id: String,
             val environment: String = "production"
@@ -113,7 +139,8 @@ class MmobClient(private val mmobView: MmobView, private val context: Context, p
     }
 
     data class MmobCustomerInfo(
-        val customerInfo: Configuration) {
+        val customerInfo: Configuration
+    ) {
         data class Configuration(
             val email: String? = null,
             val first_name: String? = null,
@@ -151,7 +178,8 @@ class MmobClient(private val mmobView: MmobView, private val context: Context, p
     }
 }
 
- private class MMOBWebViewClient(private val context: Context, private val instanceDomain: String): WebViewClient() {
+private class MMOBWebViewClient(private val context: Context, private val instanceDomain: String) :
+    WebViewClient() {
     @Deprecated("shouldOverrideUrlLoading is deprecated, providing support for older versions of Android")
     override fun shouldOverrideUrlLoading(view: MmobView?, url: String?): Boolean {
         return handleUri(Uri.parse(url))
@@ -162,10 +190,9 @@ class MmobClient(private val mmobView: MmobView, private val context: Context, p
         return handleUri(request.url)
     }
 
-     private fun handleUri(uri: Uri): Boolean {
-         val tld = InternetDomainName.from(uri.host).topPrivateDomain().toString()
-
-         // Do not override whitelisted domains; let MmobView load the page
+    private fun handleUri(uri: Uri): Boolean {
+        // Do not override whitelisted domains; let MmobView load the page
+        val tld = InternetDomainName.from(uri.host).topPrivateDomain().toString()
         if (instanceDomain == tld) {
             return false
         }
