@@ -15,7 +15,7 @@ import kotlin.reflect.full.memberProperties
 
 typealias MmobView = WebView
 
-class MmobClient(private val mmobView: MmobView, private val context: Context, private val instanceDomain: String = "mmob") {
+class MmobClient(private val mmobView: MmobView, private val context: Context, private val instanceDomain: String = "mmob.com") {
     fun loadIntegration(integration: MmobIntegrationConfiguration, customerInfo: MmobCustomerInfo) {
         val data = "&${encodeIntegrationConfiguration(integration)}&customer_info${encodeCustomerInfo(customerInfo)}"
 
@@ -30,9 +30,9 @@ class MmobClient(private val mmobView: MmobView, private val context: Context, p
 
     private fun getUrl(environment: String, instanceDomain: String, suffix: String = "boot"): String {
         val localUrl = "http://localhost:3100/$suffix"
-        val devUrl = "https://client-ingress.dev.$instanceDomain.com/$suffix"
-        val stagUrl = "https://client-ingress.stag.$instanceDomain.com/$suffix"
-        val prodUrl = "https://client-ingress.prod.$instanceDomain.com/$suffix"
+        val devUrl = "https://client-ingress.dev.$instanceDomain/$suffix"
+        val stagUrl = "https://client-ingress.stag.$instanceDomain/$suffix"
+        val prodUrl = "https://client-ingress.prod.$instanceDomain/$suffix"
 
         return when (environment) {
             "local" -> localUrl
@@ -92,7 +92,7 @@ class MmobClient(private val mmobView: MmobView, private val context: Context, p
         webSettings.javaScriptEnabled = true
 
         // Force links and redirects to open in the WebView instead of in a browser
-        mmobView.webViewClient = MMOBWebViewClient(mmobView.context)
+        mmobView.webViewClient = MMOBWebViewClient(mmobView.context, instanceDomain)
 
         // Post data to url
         mmobView.postUrl(url, data.toByteArray())
@@ -151,15 +151,7 @@ class MmobClient(private val mmobView: MmobView, private val context: Context, p
     }
 }
 
- private class MMOBWebViewClient(private val context: Context): WebViewClient() {
-    companion object {
-        val whitelistedHosts: Array<String> = arrayOf(
-            "localhost:3100",
-            "mmob.com",
-            "ef-network.com"
-        )
-    }
-
+ private class MMOBWebViewClient(private val context: Context, private val instanceDomain: String): WebViewClient() {
     @Deprecated("shouldOverrideUrlLoading is deprecated, providing support for older versions of Android")
     override fun shouldOverrideUrlLoading(view: MmobView?, url: String?): Boolean {
         return handleUri(Uri.parse(url))
@@ -173,8 +165,8 @@ class MmobClient(private val mmobView: MmobView, private val context: Context, p
      private fun handleUri(uri: Uri): Boolean {
          val tld = InternetDomainName.from(uri.host).topPrivateDomain().toString()
 
-        // Do not override whitelisted domains; let MmobView load the page
-        if (whitelistedHosts.contains(tld)) {
+         // Do not override whitelisted domains; let MmobView load the page
+        if (instanceDomain == tld) {
             return false
         }
 
@@ -182,6 +174,7 @@ class MmobClient(private val mmobView: MmobView, private val context: Context, p
         Intent(Intent.ACTION_VIEW, uri).apply {
             context.startActivity(this)
         }
+
         return true
     }
 }
