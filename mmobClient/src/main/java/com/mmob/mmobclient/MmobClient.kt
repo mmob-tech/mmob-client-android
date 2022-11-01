@@ -151,7 +151,7 @@ class MmobClient(private val mmobView: MmobView, private val context: Context, p
     }
 }
 
- private class MMOBWebViewClient(val context: Context): WebViewClient() {
+ private class MMOBWebViewClient(private val context: Context): WebViewClient() {
     companion object {
         val whitelistedHosts: Array<String> = arrayOf(
             "localhost:3100",
