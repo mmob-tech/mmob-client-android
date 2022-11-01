@@ -1,10 +1,17 @@
 package com.mmob.mmobclient
 
+import android.annotation.TargetApi
 import android.content.Context
+import android.content.Intent
+import android.net.Uri
+import android.os.Build
+import android.webkit.WebResourceRequest
 import android.webkit.WebView
 import android.webkit.WebViewClient
+import com.google.common.net.InternetDomainName
 import java.net.URLEncoder
 import kotlin.reflect.full.memberProperties
+
 
 typealias MmobView = WebView
 
@@ -85,7 +92,7 @@ class MmobClient(private val mmobView: MmobView, private val context: Context, p
         webSettings.javaScriptEnabled = true
 
         // Force links and redirects to open in the WebView instead of in a browser
-        mmobView.webViewClient = WebViewClient()
+        mmobView.webViewClient = MMOBWebViewClient(mmobView.context)
 
         // Post data to url
         mmobView.postUrl(url, data.toByteArray())
@@ -95,16 +102,14 @@ class MmobClient(private val mmobView: MmobView, private val context: Context, p
         val cp_id: String,
         val cp_deployment_id: String,
         val environment: String = "production"
-    ) {
-    }
+    )
 
     data class MmobDistribution(
         val distribution: Configuration) {
         data class Configuration(
             val distribution_id: String,
             val environment: String = "production"
-        ) {
-        }
+        )
     }
 
     data class MmobCustomerInfo(
@@ -113,15 +118,71 @@ class MmobClient(private val mmobView: MmobView, private val context: Context, p
             val email: String? = null,
             val first_name: String? = null,
             val surname: String? = null,
-            val gender: String? = null,
             val title: String? = null,
+            val preferred_name: String? = null,
+            val dob: String? = null,
+            val postcode: String? = null,
             val building_number: String? = null,
             val address_1: String? = null,
+            val address_2: String? = null,
+            val address_3: String? = null,
             val town_city: String? = null,
-            val postcode: String? = null,
-            val dob: String? = null
-        ) {
+            val country: String? = null,
+            val country_of_residence: String? = null,
+            val nationality: String? = null,
+            val gender: String? = null,
+            val relationship_status: String? = null,
+            val number_of_children: Number? = null,
+            val ages_of_children: Number? = null,
+            val partner_first_name: String? = null,
+            val partner_surname: String? = null,
+            val partner_dob: String? = null,
+            val partner_sex: String? = null,
+            val relationship_to_partner: String? = null,
+            val smoker: String? = null,
+            val number_of_cigarettes_per_week: Number? = null,
+            val drinker: String? = null,
+            val number_of_units_per_week: Number? = null,
+            val passport_number: String? = null,
+            val national_insurance_number: String? = null,
+            val phone_number: String? = null,
+            val mobile_number: String? = null,
+        )
+    }
+}
+
+ private class MMOBWebViewClient(val context: Context): WebViewClient() {
+    companion object {
+        val whitelistedHosts: Array<String> = arrayOf(
+            "localhost:3100",
+            "mmob.com",
+            "ef-network.com"
+        )
+    }
+
+    @Deprecated("shouldOverrideUrlLoading is deprecated, providing support for older versions of Android")
+    override fun shouldOverrideUrlLoading(view: MmobView?, url: String?): Boolean {
+        return handleUri(Uri.parse(url))
+    }
+
+    @TargetApi(Build.VERSION_CODES.N)
+    override fun shouldOverrideUrlLoading(view: WebView?, request: WebResourceRequest): Boolean {
+        return handleUri(request.url)
+    }
+
+     private fun handleUri(uri: Uri): Boolean {
+         val tld = InternetDomainName.from(uri.host).topPrivateDomain().toString()
+
+        // Do not override whitelisted domains; let MmobView load the page
+        if (whitelistedHosts.contains(tld)) {
+            return false
         }
+
+        // Otherwise, launch URL in the browser
+        Intent(Intent.ACTION_VIEW, uri).apply {
+            context.startActivity(this)
+        }
+        return true
     }
 }
 
