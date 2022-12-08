@@ -28,7 +28,7 @@ class MmobClient(
     }
 
     fun loadDistribution(distribution: MmobDistribution, customerInfo: MmobCustomerInfo) {
-        val data = "configuration${encodeDistributionConfiguration(distribution)}&customer_info${
+        val data = "configuration${encodeDistributionConfiguration(distribution)}${
             encodeCustomerInfo(customerInfo)
         }"
 
@@ -107,7 +107,11 @@ class MmobClient(
             }
         }
 
-        return queryStringArray.joinToString("&customer_info")
+        if (queryStringArray.isEmpty()) {
+            return ""
+        }
+
+        return "&customer_info${queryStringArray.joinToString("&customer_info")}"
     }
 
     private fun startWebView(mmobView: WebView, url: String, data: String) {
