@@ -20,7 +20,7 @@ class MmobClient(
     private val instanceDomain: String = "mmob.com"
 ) {
     fun loadIntegration(integration: MmobIntegrationConfiguration, customerInfo: MmobCustomerInfo) {
-        val data = "&${encodeIntegrationConfiguration(integration)}&customer_info${
+        val data = "&${encodeIntegrationConfiguration(integration)}${
             encodeCustomerInfo(customerInfo)
         }"
 
@@ -44,7 +44,7 @@ class MmobClient(
         instanceDomain: String,
         suffix: String = "boot"
     ): String {
-        val localUrl = "http://localhost:3100/$suffix"
+        val localUrl = "http://10.0.2.2:3100/$suffix"
         val devUrl = "https://client-ingress.dev.$instanceDomain/$suffix"
         val stagUrl = "https://client-ingress.stag.$instanceDomain/$suffix"
         val prodUrl = "https://client-ingress.prod.$instanceDomain/$suffix"
@@ -111,7 +111,9 @@ class MmobClient(
             return ""
         }
 
-        return "&customer_info${queryStringArray.joinToString("&customer_info")}"
+        val data = "&${queryStringArray.joinToString("&")}"
+System.out.println("[LOG] $data")
+        return data
     }
 
     private fun startWebView(mmobView: WebView, url: String, data: String) {
