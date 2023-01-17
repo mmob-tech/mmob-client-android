@@ -112,7 +112,6 @@ class MmobClient(
         }
 
         val data = "&${queryStringArray.joinToString("&")}"
-System.out.println("[LOG] $data")
         return data
     }
 
