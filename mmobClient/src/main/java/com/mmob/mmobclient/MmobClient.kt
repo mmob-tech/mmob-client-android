@@ -9,6 +9,7 @@ import android.webkit.WebResourceRequest
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import com.google.common.net.InternetDomainName
+import java.net.URI
 import java.net.URLEncoder
 import kotlin.reflect.full.memberProperties
 
@@ -111,8 +112,7 @@ class MmobClient(
             return ""
         }
 
-        val data = "&${queryStringArray.joinToString("&")}"
-        return data
+        return "&${queryStringArray.joinToString("&")}"
     }
 
     private fun startWebView(mmobView: WebView, url: String, data: String) {
@@ -196,17 +196,26 @@ private class MmobViewClient(private val context: Context, private val instanceD
 
     private fun handleUri(uri: Uri): Boolean {
         // Do not override whitelisted domains; let MmobView load the page
-        val tld = InternetDomainName.from(uri.host.toString()).topPrivateDomain().toString()
-        if (instanceDomain == tld) {
+        if (instanceDomain == getDomain(uri)) {
             return false
         }
 
-        // Otherwise, launch URL in the browser
+        // Otherwise, launch URL in MMOB Browser
+        // TODO
         Intent(Intent.ACTION_VIEW, uri).apply {
             context.startActivity(this)
         }
 
         return true
+    }
+
+    private fun getDomain(uri: Uri): String? {
+        return try {
+            val uriHostString = uri.host.toString()
+            InternetDomainName.from(uriHostString).topPrivateDomain().toString()
+        } catch (e: Exception) {
+            null
+        }
     }
 }
 
