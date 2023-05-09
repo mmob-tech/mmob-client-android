@@ -5,9 +5,11 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Build
+import android.util.Log
 import android.webkit.WebResourceRequest
 import android.webkit.WebView
 import android.webkit.WebViewClient
+import androidx.core.content.ContextCompat.startActivity
 import com.google.common.net.InternetDomainName
 import java.net.URI
 import java.net.URLEncoder
@@ -41,9 +43,7 @@ class MmobClient(
     }
 
     private fun getUrl(
-        environment: String,
-        instanceDomain: String,
-        suffix: String = "boot"
+        environment: String, instanceDomain: String, suffix: String = "boot"
     ): String {
         val localUrl = "http://10.0.2.2:3100/$suffix"
         val devUrl = "https://client-ingress.dev.$instanceDomain/$suffix"
@@ -128,17 +128,14 @@ class MmobClient(
     }
 
     data class MmobIntegrationConfiguration(
-        val cp_id: String,
-        val cp_deployment_id: String,
-        val environment: String = "production"
+        val cp_id: String, val cp_deployment_id: String, val environment: String = "production"
     )
 
     data class MmobDistribution(
         val distribution: Configuration
     ) {
         data class Configuration(
-            val distribution_id: String,
-            val environment: String = "production"
+            val distribution_id: String, val environment: String = "production"
         )
     }
 
@@ -200,10 +197,14 @@ private class MmobViewClient(private val context: Context, private val instanceD
             return false
         }
 
-        // Otherwise, launch URL in MMOB Browser
-        // TODO
-        Intent(Intent.ACTION_VIEW, uri).apply {
-            context.startActivity(this)
+        // Otherwise, launch URL in MmobBrowser
+        try {
+            val intent = Intent(context, MmobBrowser::class.java).apply {
+                putExtra("uri", uri.toString())
+            }
+            context.startActivity(intent)
+        } catch (e: Exception) {
+            null
         }
 
         return true
