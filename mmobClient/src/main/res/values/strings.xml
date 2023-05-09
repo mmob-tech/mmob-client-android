@@ -1,1 +1,9 @@
-<resources></resources>
+<resources>
+    <string name="app_name">mmob-tester-android</string>
+    <string name="browser_title">Browser Title</string>
+    <string name="browser_subtitle">Browser Subtitle</string>
+    <string name="browser_close_button">Browser Close button</string>
+    <string name="browser_forward_button">Browser Forward button</string>
+    <string name="browser_back_button">Browser Back button</string>
+    <string name="browser_padlock_icon">Browser HTTPS Padlock icon</string>
+</resources>
