@@ -5,10 +5,13 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Build
+import android.util.Log
 import android.webkit.WebResourceRequest
 import android.webkit.WebView
 import android.webkit.WebViewClient
+import androidx.core.content.ContextCompat.startActivity
 import com.google.common.net.InternetDomainName
+import java.net.URI
 import java.net.URLEncoder
 import kotlin.reflect.full.memberProperties
 
@@ -17,7 +20,7 @@ typealias MmobView = WebView
 class MmobClient(
     private val mmobView: MmobView,
     private val context: Context,
-    private val instanceDomain: String = "mmob.com"
+    private val instanceDomain: InstanceDomain = InstanceDomain.MMOB
 ) {
     fun loadIntegration(integration: MmobIntegrationConfiguration, customerInfo: MmobCustomerInfo) {
         val data = "&${encodeIntegrationConfiguration(integration)}${
@@ -40,14 +43,14 @@ class MmobClient(
     }
 
     private fun getUrl(
-        environment: String,
-        instanceDomain: String,
-        suffix: String = "boot"
+        environment: String, instanceDomain: InstanceDomain, suffix: String = "boot"
     ): String {
+        val parsedInstanceDomain = MmobClientHelper().getInstanceDomain(instanceDomain)
+
         val localUrl = "http://10.0.2.2:3100/$suffix"
-        val devUrl = "https://client-ingress.dev.$instanceDomain/$suffix"
-        val stagUrl = "https://client-ingress.stag.$instanceDomain/$suffix"
-        val prodUrl = "https://client-ingress.prod.$instanceDomain/$suffix"
+        val devUrl = "https://client-ingress.dev.$parsedInstanceDomain/$suffix"
+        val stagUrl = "https://client-ingress.stag.$parsedInstanceDomain/$suffix"
+        val prodUrl = "https://client-ingress.prod.$parsedInstanceDomain/$suffix"
 
         return when (environment) {
             "local" -> localUrl
@@ -111,8 +114,7 @@ class MmobClient(
             return ""
         }
 
-        val data = "&${queryStringArray.joinToString("&")}"
-        return data
+        return "&${queryStringArray.joinToString("&")}"
     }
 
     private fun startWebView(mmobView: WebView, url: String, data: String) {
@@ -128,17 +130,14 @@ class MmobClient(
     }
 
     data class MmobIntegrationConfiguration(
-        val cp_id: String,
-        val cp_deployment_id: String,
-        val environment: String = "production"
+        val cp_id: String, val cp_deployment_id: String, val environment: String = "production"
     )
 
     data class MmobDistribution(
         val distribution: Configuration
     ) {
         data class Configuration(
-            val distribution_id: String,
-            val environment: String = "production"
+            val distribution_id: String, val environment: String = "production"
         )
     }
 
@@ -182,7 +181,7 @@ class MmobClient(
     }
 }
 
-private class MmobViewClient(private val context: Context, private val instanceDomain: String) :
+private class MmobViewClient(private val context: Context, private val instanceDomain: InstanceDomain) :
     WebViewClient() {
     @Deprecated("shouldOverrideUrlLoading is deprecated, providing support for older versions of Android")
     override fun shouldOverrideUrlLoading(view: MmobView?, url: String): Boolean {
@@ -196,14 +195,21 @@ private class MmobViewClient(private val context: Context, private val instanceD
 
     private fun handleUri(uri: Uri): Boolean {
         // Do not override whitelisted domains; let MmobView load the page
-        val tld = InternetDomainName.from(uri.host.toString()).topPrivateDomain().toString()
-        if (instanceDomain == tld) {
+        val parsedInstanceDomain = MmobClientHelper().getInstanceDomain(instanceDomain)
+        val domain = MmobClientHelper().getDomain(uri)
+
+        if (parsedInstanceDomain == domain) {
             return false
         }
 
-        // Otherwise, launch URL in the browser
-        Intent(Intent.ACTION_VIEW, uri).apply {
-            context.startActivity(this)
+        // Otherwise, launch URL in MmobBrowser
+        try {
+            val intent = Intent(context, MmobBrowser::class.java).apply {
+                putExtra("uri", uri.toString())
+            }
+            context.startActivity(intent)
+        } catch (e: Exception) {
+            null
         }
 
         return true
