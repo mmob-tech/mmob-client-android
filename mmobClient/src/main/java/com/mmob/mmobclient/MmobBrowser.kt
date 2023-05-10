@@ -52,13 +52,13 @@ class MmobBrowser : AppCompatActivity() {
                 return true
             }
 
-
             // Update title, subtitle text when page finishes loading
             override fun onPageFinished(view: WebView?, url: String?) {
                 super.onPageFinished(view, url)
 
+                val helper = MmobClientHelper()
                 val title = view?.title
-                val subtitle = extractHostFromUrl(url)
+                val subtitle = helper.getHost(url)
 
                 if (title != null) {
                     Log.d("MMOBBROWSER", "Setting title to $title")
@@ -105,19 +105,6 @@ class MmobBrowser : AppCompatActivity() {
                 Log.d("BUTTON", "Navigating forwards")
                 webView.goForward()
             }
-        }
-    }
-
-    fun extractHostFromUrl(urlString: String?): String? {
-        return try {
-            if (urlString == null) {
-                return null
-            }
-
-            val uri = URI(urlString)
-            uri.host
-        } catch (e: Exception) {
-            null
         }
     }
 }

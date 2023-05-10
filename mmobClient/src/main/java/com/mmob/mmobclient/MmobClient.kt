@@ -193,7 +193,8 @@ private class MmobViewClient(private val context: Context, private val instanceD
 
     private fun handleUri(uri: Uri): Boolean {
         // Do not override whitelisted domains; let MmobView load the page
-        if (instanceDomain == getDomain(uri)) {
+        val domain = MmobClientHelper().getDomain(uri)
+        if (instanceDomain == domain) {
             return false
         }
 
@@ -208,15 +209,6 @@ private class MmobViewClient(private val context: Context, private val instanceD
         }
 
         return true
-    }
-
-    private fun getDomain(uri: Uri): String? {
-        return try {
-            val uriHostString = uri.host.toString()
-            InternetDomainName.from(uriHostString).topPrivateDomain().toString()
-        } catch (e: Exception) {
-            null
-        }
     }
 }
 
