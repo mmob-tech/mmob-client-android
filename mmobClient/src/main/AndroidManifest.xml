@@ -6,7 +6,8 @@
         <activity
             android:name=".MmobBrowser"
             android:exported="false"
-            android:usesCleartextTraffic="false">
+            android:usesCleartextTraffic="false"
+            android:allowBackup="true">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
