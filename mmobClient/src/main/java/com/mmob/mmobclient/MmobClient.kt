@@ -20,7 +20,7 @@ typealias MmobView = WebView
 class MmobClient(
     private val mmobView: MmobView,
     private val context: Context,
-    private val instanceDomain: String = "mmob.com"
+    private val instanceDomain: InstanceDomain = InstanceDomain.MMOB
 ) {
     fun loadIntegration(integration: MmobIntegrationConfiguration, customerInfo: MmobCustomerInfo) {
         val data = "&${encodeIntegrationConfiguration(integration)}${
@@ -43,12 +43,14 @@ class MmobClient(
     }
 
     private fun getUrl(
-        environment: String, instanceDomain: String, suffix: String = "boot"
+        environment: String, instanceDomain: InstanceDomain, suffix: String = "boot"
     ): String {
+        val parsedInstanceDomain = MmobClientHelper().getInstanceDomain(instanceDomain)
+
         val localUrl = "http://10.0.2.2:3100/$suffix"
-        val devUrl = "https://client-ingress.dev.$instanceDomain/$suffix"
-        val stagUrl = "https://client-ingress.stag.$instanceDomain/$suffix"
-        val prodUrl = "https://client-ingress.prod.$instanceDomain/$suffix"
+        val devUrl = "https://client-ingress.dev.$parsedInstanceDomain/$suffix"
+        val stagUrl = "https://client-ingress.stag.$parsedInstanceDomain/$suffix"
+        val prodUrl = "https://client-ingress.prod.$parsedInstanceDomain/$suffix"
 
         return when (environment) {
             "local" -> localUrl
@@ -179,7 +181,7 @@ class MmobClient(
     }
 }
 
-private class MmobViewClient(private val context: Context, private val instanceDomain: String) :
+private class MmobViewClient(private val context: Context, private val instanceDomain: InstanceDomain) :
     WebViewClient() {
     @Deprecated("shouldOverrideUrlLoading is deprecated, providing support for older versions of Android")
     override fun shouldOverrideUrlLoading(view: MmobView?, url: String): Boolean {
@@ -193,8 +195,10 @@ private class MmobViewClient(private val context: Context, private val instanceD
 
     private fun handleUri(uri: Uri): Boolean {
         // Do not override whitelisted domains; let MmobView load the page
+        val parsedInstanceDomain = MmobClientHelper().getInstanceDomain(instanceDomain)
         val domain = MmobClientHelper().getDomain(uri)
-        if (instanceDomain == domain) {
+
+        if (parsedInstanceDomain == domain) {
             return false
         }
 

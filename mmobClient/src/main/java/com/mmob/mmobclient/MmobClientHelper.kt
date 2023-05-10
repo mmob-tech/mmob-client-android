@@ -4,6 +4,10 @@ import android.net.Uri
 import com.google.common.net.InternetDomainName
 import java.net.URI
 
+enum class InstanceDomain {
+    MMOB, EFNETWORK
+}
+
 class MmobClientHelper {
     fun getDomain(uri: Uri): String? {
         return try {
@@ -11,6 +15,13 @@ class MmobClientHelper {
             InternetDomainName.from(uriHostString).topPrivateDomain().toString()
         } catch (e: Exception) {
             null
+        }
+    }
+
+    fun getInstanceDomain(instanceDomain: InstanceDomain): String {
+        return when (instanceDomain) {
+            InstanceDomain.MMOB -> "mmob.com"
+            InstanceDomain.EFNETWORK -> "ef-network.com"
         }
     }
 
