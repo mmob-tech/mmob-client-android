@@ -10,7 +10,6 @@ import android.webkit.WebView
 import android.webkit.WebViewClient
 import android.widget.ImageButton
 import android.widget.TextView
-import java.net.URI
 
 class MmobBrowser : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
