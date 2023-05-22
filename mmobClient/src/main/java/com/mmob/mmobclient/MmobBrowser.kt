@@ -25,7 +25,6 @@ class MmobBrowser : AppCompatActivity() {
         val intentUri = intent.getStringExtra("uri")
 
         if (intentUri != null) {
-            Log.d("MMOBBROWSER", "Navigating to $intentUri")
             webView.loadUrl(intentUri)
         }
 
@@ -45,7 +44,6 @@ class MmobBrowser : AppCompatActivity() {
 
             private fun handleOverrideUrlLoading(view: WebView?, url: String?): Boolean {
                 if (url != null) {
-                    Log.d("MMOBBROWSER", "Redirecting to $url")
                     view?.loadUrl(url)
                 }
                 return true
@@ -60,12 +58,10 @@ class MmobBrowser : AppCompatActivity() {
                 val subtitle = helper.getHost(url)
 
                 if (title != null) {
-                    Log.d("MMOBBROWSER", "Setting title to $title")
                     headerTitle.text = title
                 }
 
                 if (subtitle != null) {
-                    Log.d("MMOBBROWSER", "Setting subtitle to $subtitle")
                     headerSubtitle.text = subtitle
                 }
 
@@ -94,14 +90,12 @@ class MmobBrowser : AppCompatActivity() {
 
         backButton.setOnClickListener {
             if (webView.canGoBack()) {
-                Log.d("BUTTON", "Navigating back")
                 webView.goBack()
             }
         }
 
         forwardButton.setOnClickListener {
             if (webView.canGoForward()) {
-                Log.d("BUTTON", "Navigating forwards")
                 webView.goForward()
             }
         }

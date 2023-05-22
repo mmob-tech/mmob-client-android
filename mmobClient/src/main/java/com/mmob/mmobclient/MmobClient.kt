@@ -5,13 +5,9 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Build
-import android.util.Log
 import android.webkit.WebResourceRequest
 import android.webkit.WebView
 import android.webkit.WebViewClient
-import androidx.core.content.ContextCompat.startActivity
-import com.google.common.net.InternetDomainName
-import java.net.URI
 import java.net.URLEncoder
 import kotlin.reflect.full.memberProperties
 
@@ -196,7 +192,7 @@ private class MmobViewClient(private val context: Context, private val instanceD
     private fun handleUri(uri: Uri): Boolean {
         // Do not override whitelisted domains; let MmobView load the page
         val parsedInstanceDomain = MmobClientHelper().getInstanceDomain(instanceDomain)
-        val domain = MmobClientHelper().getDomain(uri)
+        val domain = MmobClientHelper().getRootDomain(uri)
 
         if (parsedInstanceDomain == domain) {
             return false
