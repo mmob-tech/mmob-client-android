@@ -58,13 +58,13 @@
                 android:orientation="horizontal">
 
                 <ImageView
-                    android:layout_width="8dp"
-                    android:layout_height="8dp"
+                    android:layout_width="14dp"
+                    android:layout_height="14dp"
                     android:src="@drawable/ic_padlock"
                     android:contentDescription="@string/browser_padlock_icon"/>
 
                 <Space
-                    android:layout_width="5dp"
+                    android:layout_width="4dp"
                     android:layout_height="match_parent" />
 
                 <TextView
@@ -79,6 +79,7 @@
             </LinearLayout>
 
         </LinearLayout>
+
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -96,10 +97,20 @@
         android:id="@+id/browser_web_view"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        app:layout_constraintBottom_toTopOf="@id/footer"
+        app:layout_constraintBottom_toTopOf="@id/footer_border"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/header" />
+        app:layout_constraintTop_toBottomOf="@+id/header_border" />
+
+    <!-- Footer Border -->
+    <View
+        android:id="@+id/footer_border"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#E2E9EE"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/browser_web_view" />
 
     <!-- Footer border-->
     <View
