@@ -9,10 +9,14 @@ enum class InstanceDomain {
 }
 
 class MmobClientHelper {
-    fun getDomain(uri: Uri): String? {
+    fun getHost(urlString: String?): String? {
         return try {
-            val uriHostString = uri.host.toString()
-            InternetDomainName.from(uriHostString).topPrivateDomain().toString()
+            if (urlString == null) {
+                return null
+            }
+
+            val uri = URI(urlString)
+            uri.host
         } catch (e: Exception) {
             null
         }
@@ -25,14 +29,10 @@ class MmobClientHelper {
         }
     }
 
-    fun getHost(urlString: String?): String? {
+    fun getRootDomain(uri: Uri): String? {
         return try {
-            if (urlString == null) {
-                return null
-            }
-
-            val uri = URI(urlString)
-            uri.host
+            val uriHostString = uri.host.toString()
+            InternetDomainName.from(uriHostString).topPrivateDomain().toString()
         } catch (e: Exception) {
             null
         }
