@@ -44,7 +44,7 @@ import com.mmob.mmobclient.MmobView
 class MmobViewActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        setContentView(R.layout.activity_mmob_client)
 
         val mmobView: MmobView = findViewById(R.id.mmob_view)
         val client = MmobClient(mmobView, applicationContext)
