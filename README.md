@@ -1,4 +1,4 @@
-# MMOB's Android Client
+# MMOB's Android Client 📱
 
 The MMOB Android Client works across multiple Android versions from 5.0 Lollipop to 12.0 Snow Cone
 
