@@ -56,7 +56,7 @@ class MmobViewActivity : AppCompatActivity() {
 
         val customerInfo = MmobClient.MmobCustomerInfo(
             customerInfo = MmobClient.MmobCustomerInfo.Configuration(
-                 email = "john.smith@example.com",
+                email = "john.smith@example.com",
                 first_name = "John",
                 surname = "Smith",
                 title = "Mr",
