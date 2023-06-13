@@ -4,7 +4,6 @@ import android.annotation.TargetApi
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.webkit.WebResourceRequest
 import android.webkit.WebView
 import android.webkit.WebViewClient
@@ -23,6 +22,9 @@ class MmobBrowser : AppCompatActivity() {
         val backButton = findViewById<ImageButton>(R.id.browser_back_button)
         val forwardButton = findViewById<ImageButton>(R.id.browser_forward_button)
         val intentUri = intent.getStringExtra("uri")
+
+        val webSettings = webView.settings
+        webSettings.javaScriptEnabled = true
 
         if (intentUri != null) {
             webView.loadUrl(intentUri)

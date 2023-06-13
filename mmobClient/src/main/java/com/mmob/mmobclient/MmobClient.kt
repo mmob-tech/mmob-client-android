@@ -179,6 +179,8 @@ class MmobClient(
 
 private class MmobViewClient(private val context: Context, private val instanceDomain: InstanceDomain) :
     WebViewClient() {
+    val helper = MmobClientHelper()
+
     @Deprecated("shouldOverrideUrlLoading is deprecated, providing support for older versions of Android")
     override fun shouldOverrideUrlLoading(view: MmobView?, url: String): Boolean {
         return handleUri(Uri.parse(url))
@@ -191,10 +193,11 @@ private class MmobViewClient(private val context: Context, private val instanceD
 
     private fun handleUri(uri: Uri): Boolean {
         // Do not override whitelisted domains; let MmobView load the page
-        val parsedInstanceDomain = MmobClientHelper().getInstanceDomain(instanceDomain)
-        val domain = MmobClientHelper().getRootDomain(uri)
+        val parsedInstanceDomain = helper.getInstanceDomain(instanceDomain)
+        val domain = helper.getRootDomain(uri)
+        val isAffiliateRedirect = helper.containsAffiliateRedirect(uri.toString())
 
-        if (parsedInstanceDomain == domain) {
+        if (parsedInstanceDomain == domain && !isAffiliateRedirect) {
             return false
         }
 
