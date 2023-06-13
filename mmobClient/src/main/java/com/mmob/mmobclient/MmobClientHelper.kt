@@ -9,6 +9,10 @@ enum class InstanceDomain {
 }
 
 class MmobClientHelper {
+    fun containsAffiliateRedirect(urlString: String): Boolean {
+        return "affiliate-redirect" in urlString
+    }
+
     fun getHost(urlString: String?): String? {
         return try {
             if (urlString == null) {
