@@ -18,14 +18,6 @@ class MmobClient(
     private val context: Context,
     private val instanceDomain: InstanceDomain = InstanceDomain.MMOB
 ) {
-    fun loadIntegration(integration: MmobIntegrationConfiguration, customerInfo: MmobCustomerInfo) {
-        val data = "&${encodeIntegrationConfiguration(integration)}${
-            encodeCustomerInfo(customerInfo)
-        }"
-
-        startWebView(mmobView, getUrl(integration.environment, instanceDomain), data)
-    }
-
     fun loadDistribution(distribution: MmobDistribution, customerInfo: MmobCustomerInfo) {
         val data = "configuration${encodeDistributionConfiguration(distribution)}${
             encodeCustomerInfo(customerInfo)
@@ -38,22 +30,25 @@ class MmobClient(
         )
     }
 
+    fun loadIntegration(integration: MmobIntegrationConfiguration, customerInfo: MmobCustomerInfo) {
+        val data = "&${encodeIntegrationConfiguration(integration)}${
+            encodeCustomerInfo(customerInfo)
+        }"
+
+        startWebView(mmobView, getUrl(integration.environment, instanceDomain), data)
+    }
+
     private fun getUrl(
         environment: String, instanceDomain: InstanceDomain, suffix: String = "boot"
     ): String {
-        val parsedInstanceDomain = MmobClientHelper().getInstanceDomain(instanceDomain)
-
-        val localUrl = "http://10.0.2.2:3100/$suffix"
-        val devUrl = "https://client-ingress.dev.$parsedInstanceDomain/$suffix"
-        val stagUrl = "https://client-ingress.stag.$parsedInstanceDomain/$suffix"
-        val prodUrl = "https://client-ingress.prod.$parsedInstanceDomain/$suffix"
+        val instanceDomainString = MmobClientHelper().getInstanceDomain(instanceDomain)
 
         return when (environment) {
-            "local" -> localUrl
-            "dev" -> devUrl
-            "stag" -> stagUrl
+            "local" -> "http://10.0.2.2:3100/$suffix"
+            "dev" -> "https://client-ingress.dev.$instanceDomainString/$suffix"
+            "stag" -> "https://client-ingress.stag.$instanceDomainString/$suffix"
             else -> {
-                prodUrl
+                "https://client-ingress.prod.$instanceDomainString/$suffix"
             }
         }
     }
