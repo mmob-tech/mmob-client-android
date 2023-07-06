@@ -52,6 +52,7 @@ class MmobViewActivity : AppCompatActivity() {
         val integration = MmobClient.MmobIntegrationConfiguration(
             cp_id = "YOUR_CP_ID_HERE",
             cp_deployment_id = "YOUR_CP_DEPLOYMENT_ID_HERE",
+            locale = "en_GB",
         )
 
         val customerInfo = MmobClient.MmobCustomerInfo(
