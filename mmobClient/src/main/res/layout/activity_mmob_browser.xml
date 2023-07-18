@@ -20,36 +20,28 @@
         <ImageButton
             android:id="@+id/browser_close_button"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:layout_marginEnd="8dp"
+            android:layout_height="match_parent"
             android:background="@android:color/transparent"
             android:contentDescription="@string/browser_close_button"
             android:src="@drawable/ic_close"
-            app:layout_constraintBottom_toTopOf="@+id/title_container"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/title_container"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:ignore="TouchTargetSizeCheck" />
 
         <!-- Title container -->
         <LinearLayout
             android:id="@+id/title_container"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
             android:gravity="center"
             android:orientation="vertical"
+            android:translationX="-12dp"
             app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/browser_close_button"
-            app:layout_constraintTop_toBottomOf="parent">
-
-            <TextView
-                android:id="@+id/browser_title"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/browser_title"
-                android:textColor="#000000"
-                android:textSize="14sp"
-                android:textStyle="bold" />
+            app:layout_constraintTop_toTopOf="parent">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -60,23 +52,36 @@
                 <ImageView
                     android:layout_width="14dp"
                     android:layout_height="14dp"
-                    android:src="@drawable/ic_padlock"
-                    android:contentDescription="@string/browser_padlock_icon"/>
+                    android:contentDescription="@string/browser_padlock_icon"
+                    android:src="@drawable/ic_padlock" />
 
                 <Space
                     android:layout_width="4dp"
                     android:layout_height="match_parent" />
 
                 <TextView
-                    android:id="@+id/browser_subtitle"
+                    android:id="@+id/browser_title"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/browser_subtitle"
-                    android:textColor="#7F8794"
-                    android:textSize="10sp"
-                    tools:ignore="SmallSp" />
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:text="@string/browser_title"
+                    android:textColor="#000000"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
 
             </LinearLayout>
+
+            <TextView
+                android:id="@+id/browser_subtitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:text="@string/browser_subtitle"
+                android:textColor="#7F8794"
+                android:textSize="10sp"
+                tools:ignore="SmallSp" />
 
         </LinearLayout>
 
@@ -115,7 +120,7 @@
     <LinearLayout
         android:id="@+id/footer"
         android:layout_width="match_parent"
-        android:layout_height="40dp"
+        android:layout_height="46dp"
         android:gravity="center_vertical"
         android:orientation="horizontal"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -138,7 +143,7 @@
         <View
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="1"/>
+            android:layout_weight="1" />
 
         <ImageButton
             android:id="@+id/browser_forward_button"
