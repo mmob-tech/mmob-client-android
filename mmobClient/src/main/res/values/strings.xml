@@ -3,6 +3,7 @@
     <string name="browser_title">Loading...</string>
     <string name="browser_subtitle">Loading webpage...</string>
     <string name="browser_close_button">Browser Close</string>
+    <string name="spacer">Spacer</string>
     <string name="browser_forward_button">Browser Forward</string>
     <string name="browser_back_button">Browser Back</string>
     <string name="browser_padlock_icon">Browser HTTPS Padlock</string>

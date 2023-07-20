@@ -1,17 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".MmobBrowser">
-
     <!-- Header -->
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/header"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:padding="8dp"
         app:layout_constraintBottom_toTopOf="@id/browser_web_view"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -25,10 +24,8 @@
             android:contentDescription="@string/browser_close_button"
             android:src="@drawable/ic_close"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/title_container"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:ignore="TouchTargetSizeCheck" />
+            tools:ignore="MissingConstraints,TouchTargetSizeCheck"
+         />
 
         <!-- Title container -->
         <LinearLayout
@@ -37,9 +34,8 @@
             android:layout_height="wrap_content"
             android:gravity="center"
             android:orientation="vertical"
-            android:translationX="-12dp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/spacer_close_button"
             app:layout_constraintStart_toEndOf="@+id/browser_close_button"
             app:layout_constraintTop_toTopOf="parent">
 
@@ -70,8 +66,23 @@
                     android:textSize="14sp"
                     android:textStyle="bold" />
 
-            </LinearLayout>
+                <Space
+                    android:layout_width="4dp"
+                    android:layout_height="match_parent" />
 
+                <!-- New Padlock Icon Button -->
+                <ImageView
+                    android:id="@+id/new_padlock_button"
+                    android:layout_width="14dp"
+                    android:layout_height="14dp"
+                    android:contentDescription="@string/browser_padlock_icon"
+                    android:src="@drawable/ic_padlock"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@+id/spacer_close_button"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:ignore="TouchTargetSizeCheck" />
+
+            </LinearLayout>
             <TextView
                 android:id="@+id/browser_subtitle"
                 android:layout_width="wrap_content"
@@ -82,12 +93,22 @@
                 android:textColor="#7F8794"
                 android:textSize="10sp"
                 tools:ignore="SmallSp" />
-
         </LinearLayout>
 
+        <!-- Spacer for Close Button -->
+        <ImageButton
+            android:id="@+id/spacer_close_button"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:background="@android:color/transparent"
+            android:contentDescription="@string/spacer"            android:src="@drawable/ic_close"
+
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:ignore="TouchTargetSizeCheck" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
-
     <!-- Header border-->
     <View
         android:id="@+id/header_border"
@@ -96,7 +117,6 @@
         android:background="#E2E9EE"
         app:layout_constraintBottom_toTopOf="@+id/browser_web_view"
         app:layout_constraintTop_toBottomOf="@id/header" />
-
     <!-- WebView -->
     <WebView
         android:id="@+id/browser_web_view"
@@ -106,21 +126,27 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/header_border" />
-
     <!-- Footer border-->
     <View
         android:id="@+id/footer_border"
         android:layout_width="match_parent"
         android:layout_height="1dp"
+        android:layout_marginBottom="10dp"
         android:background="#E2E9EE"
         app:layout_constraintBottom_toTopOf="@+id/footer"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/browser_web_view" />
 
     <!-- Footer -->
     <LinearLayout
         android:id="@+id/footer"
         android:layout_width="match_parent"
-        android:layout_height="46dp"
+        android:layout_height="50dp"
+        android:layout_marginStart="22dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="22dp"
+        android:layout_marginBottom="10dp"
         android:gravity="center_vertical"
         android:orientation="horizontal"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -135,8 +161,6 @@
             android:layout_weight="0"
             android:background="@android:color/transparent"
             android:contentDescription="@string/browser_back_button"
-            android:paddingStart="16dp"
-            android:paddingEnd="16dp"
             android:src="@drawable/ic_arrow_back"
             tools:ignore="TouchTargetSizeCheck" />
 
@@ -152,11 +176,8 @@
             android:layout_weight="0"
             android:background="@android:color/transparent"
             android:contentDescription="@string/browser_forward_button"
-            android:paddingStart="16dp"
-            android:paddingEnd="16dp"
             android:src="@drawable/ic_arrow_forward"
             tools:ignore="TouchTargetSizeCheck" />
 
     </LinearLayout>
-
 </androidx.constraintlayout.widget.ConstraintLayout>
