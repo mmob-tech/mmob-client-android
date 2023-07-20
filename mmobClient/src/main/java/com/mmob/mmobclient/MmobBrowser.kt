@@ -4,10 +4,12 @@ import android.annotation.TargetApi
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View
 import android.webkit.WebResourceRequest
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import android.widget.ImageButton
+import android.widget.ImageView
 import android.widget.TextView
 
 class MmobBrowser : AppCompatActivity() {
@@ -18,6 +20,7 @@ class MmobBrowser : AppCompatActivity() {
         val webView = findViewById<WebView>(R.id.browser_web_view)
         val headerTitle = findViewById<TextView>(R.id.browser_title)
         val headerSubtitle = findViewById<TextView>(R.id.browser_subtitle)
+        val padlockIcon = findViewById<ImageView>(R.id.padlock_icon)
         val closeButton = findViewById<ImageButton>(R.id.browser_close_button)
         val backButton = findViewById<ImageButton>(R.id.browser_back_button)
         val forwardButton = findViewById<ImageButton>(R.id.browser_forward_button)
@@ -25,6 +28,7 @@ class MmobBrowser : AppCompatActivity() {
 
         val webSettings = webView.settings
         webSettings.javaScriptEnabled = true
+        padlockIcon.visibility = View.GONE
 
         if (intentUri != null) {
             webView.loadUrl(intentUri)
@@ -65,6 +69,10 @@ class MmobBrowser : AppCompatActivity() {
 
                 if (subtitle != null) {
                     headerSubtitle.text = subtitle
+                }
+
+                if (url?.startsWith("https://") == true) {
+                    padlockIcon.visibility = View.VISIBLE
                 }
 
                 if (!webView.canGoBack()) {

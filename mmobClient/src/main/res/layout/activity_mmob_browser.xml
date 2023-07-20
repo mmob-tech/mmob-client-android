@@ -52,6 +52,7 @@
                 android:orientation="horizontal">
 
                 <ImageView
+                    android:id="@+id/padlock_icon"
                     android:layout_width="14dp"
                     android:layout_height="14dp"
                     android:contentDescription="@string/browser_padlock_icon"
@@ -74,7 +75,7 @@
 
                 <!-- Space for Padlock icon -->
                 <Space
-                    android:id="@+id/new_padlock_button"
+                    android:id="@+id/spacer_padlock_icon"
                     android:layout_width="16dp"
                     android:layout_height="match_parent" />
 
@@ -90,7 +91,7 @@
                 android:textColor="#7F8794"
                 android:textSize="10sp"
                 tools:ignore="SmallSp" />
-            
+
         </LinearLayout>
 
         <!-- Space for Close button -->
