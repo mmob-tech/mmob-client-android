@@ -11,6 +11,10 @@
         android:id="@+id/header"
         android:layout_width="match_parent"
         android:layout_height="50dp"
+        android:layout_marginStart="22dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginEnd="22dp"
+        android:layout_marginBottom="5dp"
         app:layout_constraintBottom_toTopOf="@id/browser_web_view"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -24,8 +28,10 @@
             android:contentDescription="@string/browser_close_button"
             android:src="@drawable/ic_close"
             app:layout_constraintBottom_toBottomOf="parent"
-            tools:ignore="MissingConstraints,TouchTargetSizeCheck"
-         />
+            app:layout_constraintEnd_toStartOf="@+id/title_container"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:ignore="MissingConstraints,TouchTargetSizeCheck" />
 
         <!-- Title container -->
         <LinearLayout
@@ -52,7 +58,7 @@
                     android:src="@drawable/ic_padlock" />
 
                 <Space
-                    android:layout_width="4dp"
+                    android:layout_width="2dp"
                     android:layout_height="match_parent" />
 
                 <TextView
@@ -66,23 +72,14 @@
                     android:textSize="14sp"
                     android:textStyle="bold" />
 
+                <!-- Space for Padlock icon -->
                 <Space
-                    android:layout_width="4dp"
+                    android:id="@+id/new_padlock_button"
+                    android:layout_width="16dp"
                     android:layout_height="match_parent" />
 
-                <!-- New Padlock Icon Button -->
-                <ImageView
-                    android:id="@+id/new_padlock_button"
-                    android:layout_width="14dp"
-                    android:layout_height="14dp"
-                    android:contentDescription="@string/browser_padlock_icon"
-                    android:src="@drawable/ic_padlock"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toStartOf="@+id/spacer_close_button"
-                    app:layout_constraintTop_toTopOf="parent"
-                    tools:ignore="TouchTargetSizeCheck" />
-
             </LinearLayout>
+
             <TextView
                 android:id="@+id/browser_subtitle"
                 android:layout_width="wrap_content"
@@ -93,30 +90,31 @@
                 android:textColor="#7F8794"
                 android:textSize="10sp"
                 tools:ignore="SmallSp" />
+            
         </LinearLayout>
 
-        <!-- Spacer for Close Button -->
-        <ImageButton
+        <!-- Space for Close button -->
+        <Space
             android:id="@+id/spacer_close_button"
-            android:layout_width="wrap_content"
+            android:layout_width="24dp"
             android:layout_height="match_parent"
-            android:background="@android:color/transparent"
-            android:contentDescription="@string/spacer"            android:src="@drawable/ic_close"
-
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:ignore="TouchTargetSizeCheck" />
+            app:layout_constraintStart_toEndOf="@+id/title_container"
+            app:layout_constraintTop_toTopOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
+
     <!-- Header border-->
     <View
         android:id="@+id/header_border"
         android:layout_width="match_parent"
         android:layout_height="1dp"
+        android:layout_marginTop="5dp"
         android:background="#E2E9EE"
         app:layout_constraintBottom_toTopOf="@+id/browser_web_view"
         app:layout_constraintTop_toBottomOf="@id/header" />
+
     <!-- WebView -->
     <WebView
         android:id="@+id/browser_web_view"
@@ -126,12 +124,13 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/header_border" />
+
     <!-- Footer border-->
     <View
         android:id="@+id/footer_border"
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:layout_marginBottom="10dp"
+        android:layout_marginBottom="5dp"
         android:background="#E2E9EE"
         app:layout_constraintBottom_toTopOf="@+id/footer"
         app:layout_constraintEnd_toEndOf="parent"
@@ -144,9 +143,9 @@
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:layout_marginStart="22dp"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="5dp"
         android:layout_marginEnd="22dp"
-        android:layout_marginBottom="10dp"
+        android:layout_marginBottom="5dp"
         android:gravity="center_vertical"
         android:orientation="horizontal"
         app:layout_constraintBottom_toBottomOf="parent"
