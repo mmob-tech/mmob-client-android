@@ -5,6 +5,7 @@
     <application>
         <activity
             android:name=".MmobBrowser"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"
             android:exported="false"
             android:usesCleartextTraffic="false"
             android:allowBackup="true">
