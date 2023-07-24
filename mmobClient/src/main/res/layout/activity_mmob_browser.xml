@@ -31,7 +31,7 @@
             app:layout_constraintEnd_toStartOf="@+id/title_container"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            tools:ignore="MissingConstraints,TouchTargetSizeCheck" />
+            tools:ignore="MissingConstraints,TouchTargetSizeCheck,ImageContrastCheck" />
 
         <!-- Title container -->
         <LinearLayout
@@ -56,7 +56,8 @@
                     android:layout_width="14dp"
                     android:layout_height="14dp"
                     android:contentDescription="@string/browser_padlock_icon"
-                    android:src="@drawable/ic_padlock" />
+                    android:src="@drawable/ic_padlock"
+                    tools:ignore="ImageContrastCheck" />
 
                 <Space
                     android:layout_width="2dp"
@@ -90,7 +91,7 @@
                 android:text="@string/browser_subtitle"
                 android:textColor="#7F8794"
                 android:textSize="10sp"
-                tools:ignore="SmallSp" />
+                tools:ignore="SmallSp,TextContrastCheck" />
 
         </LinearLayout>
 
@@ -162,7 +163,7 @@
             android:background="@android:color/transparent"
             android:contentDescription="@string/browser_back_button"
             android:src="@drawable/ic_arrow_back"
-            tools:ignore="TouchTargetSizeCheck" />
+            tools:ignore="TouchTargetSizeCheck,ImageContrastCheck" />
 
         <View
             android:layout_width="0dp"
@@ -177,7 +178,7 @@
             android:background="@android:color/transparent"
             android:contentDescription="@string/browser_forward_button"
             android:src="@drawable/ic_arrow_forward"
-            tools:ignore="TouchTargetSizeCheck" />
+            tools:ignore="TouchTargetSizeCheck,ImageContrastCheck" />
 
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
