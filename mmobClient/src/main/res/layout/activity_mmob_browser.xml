@@ -76,7 +76,7 @@
                 <!-- Space for Padlock icon -->
                 <Space
                     android:id="@+id/spacer_padlock_icon"
-                    android:layout_width="16dp"
+                    android:layout_width="6dp"
                     android:layout_height="match_parent" />
 
             </LinearLayout>
