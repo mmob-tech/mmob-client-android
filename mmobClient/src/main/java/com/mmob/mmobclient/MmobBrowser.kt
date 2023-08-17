@@ -2,7 +2,6 @@ package com.mmob.mmobclient
 
 import android.annotation.TargetApi
 import android.os.Build
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import android.webkit.WebResourceRequest
@@ -11,6 +10,7 @@ import android.webkit.WebViewClient
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
 
 class MmobBrowser : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -27,6 +27,7 @@ class MmobBrowser : AppCompatActivity() {
         val intentUri = intent.getStringExtra("uri")
 
         val webSettings = webView.settings
+        webSettings.domStorageEnabled = true
         webSettings.javaScriptEnabled = true
         padlockIcon.visibility = View.GONE
 
