@@ -111,6 +111,7 @@ class MmobClient(
     private fun startWebView(mmobView: WebView, url: String, data: String) {
         // Enable Javascript
         val webSettings = mmobView.settings
+        webSettings.domStorageEnabled = true
         webSettings.javaScriptEnabled = true
 
         // Force links and redirects to open in the WebView instead of in a browser
