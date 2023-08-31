@@ -187,13 +187,36 @@ private class MmobViewClient(private val context: Context, private val instanceD
         return handleUri(request.url)
     }
 
+    // Gives us a chance to take control when a URL is about to be loaded in the MmobViewClient
+    // Boolean response determines whether we took control or not
+    // True to cancel current load
     private fun handleUri(uri: Uri): Boolean {
-        // Do not override whitelisted domains; let MmobView load the page
-        val parsedInstanceDomain = helper.getInstanceDomain(instanceDomain)
         val domain = helper.getRootDomain(uri)
-        val isAffiliateRedirect = helper.containsAffiliateRedirect(uri.toString())
+        val instanceDomainString = helper.getInstanceDomain(instanceDomain)
+        val isAffiliateRedirect = helper.isAffiliateRedirect(uri)
 
-        if (parsedInstanceDomain == domain && !isAffiliateRedirect) {
+        // uri is invalid, cancel current load
+        val isValidUri = helper.isUriValid(uri.toString())
+        if (!isValidUri) {
+            return true
+        }
+
+        // uri does not begin with http / https, open in native browser, cancel current load
+        val isValidUrlScheme = helper.isValidUrlScheme(uri)
+        if (!isValidUrlScheme) {
+            helper.openUriInBrowser(context, uri)
+            return true
+        }
+
+        // uri domain is blacklisted, open in native browser, cancel current load
+        val isBlacklistedDomain = helper.isBlacklistedDomain(uri)
+        if (isBlacklistedDomain) {
+            helper.openUriInBrowser(context, uri)
+            return true
+        }
+
+        // Instance domain matches, is not an affiliate redirect, continue within current view
+        if (instanceDomainString == domain && !isAffiliateRedirect) {
             return false
         }
 
@@ -204,7 +227,7 @@ private class MmobViewClient(private val context: Context, private val instanceD
             }
             context.startActivity(intent)
         } catch (e: Exception) {
-            null
+            return true
         }
 
         return true
