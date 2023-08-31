@@ -34,7 +34,7 @@ class MmobClientHelper {
 
     fun isUriValid(uriString: String): Boolean {
         return try {
-            val uri = URI(uriString)
+            URI(uriString)
             true
         } catch (e: Exception) {
             false
@@ -65,12 +65,10 @@ class MmobClientHelper {
         }
     }
 
-    fun openUriInBrowser(context: Context, uri: Uri): Boolean {
+    fun openUriInBrowser(context: Context, uri: Uri) {
         if (isUriValid(uri.toString())) {
             val browserIntent = Intent(Intent.ACTION_VIEW, uri)
             context.startActivity(browserIntent)
-            return true
         }
-        return false
     }
 }
