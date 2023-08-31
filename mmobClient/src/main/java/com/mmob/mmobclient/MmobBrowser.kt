@@ -1,6 +1,7 @@
 package com.mmob.mmobclient
 
 import android.annotation.TargetApi
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.view.View
@@ -62,7 +63,7 @@ class MmobBrowser : AppCompatActivity() {
 
                 val helper = MmobClientHelper()
                 val title = view?.title
-                val subtitle = helper.getHost(url)
+                val subtitle = helper.getHost(Uri.parse(url))
 
                 if (title != null) {
                     headerTitle.text = title
