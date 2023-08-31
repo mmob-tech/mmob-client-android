@@ -188,12 +188,29 @@ private class MmobViewClient(private val context: Context, private val instanceD
     }
 
     private fun handleUri(uri: Uri): Boolean {
-        // Do not override whitelisted domains; let MmobView load the page
-        val parsedInstanceDomain = helper.getInstanceDomain(instanceDomain)
         val domain = helper.getRootDomain(uri)
-        val isAffiliateRedirect = helper.containsAffiliateRedirect(uri.toString())
+        val instanceDomainString = helper.getInstanceDomain(instanceDomain)
+        val isAffiliateRedirect = helper.isAffiliateRedirect(uri)
 
-        if (parsedInstanceDomain == domain && !isAffiliateRedirect) {
+        // uri is invalid, do nothing
+        val isValidUri = helper.isUriValid(uri.toString())
+        if (!isValidUri) {
+            return true
+        }
+
+        // uri does not begin with http / https, open in native browser
+        val isValidUrlScheme = helper.isValidUrlScheme(uri)
+        if (!isValidUrlScheme) {
+            return helper.openUriInBrowser(context, uri)
+        }
+
+        // uri domain is blacklisted, open in native browser
+        val isBlacklistedDomain = helper.isBlacklistedDomain(uri)
+        if (isBlacklistedDomain) {
+            return helper.openUriInBrowser(context, uri)
+        }
+
+        if (instanceDomainString == domain && !isAffiliateRedirect) {
             return false
         }
 
