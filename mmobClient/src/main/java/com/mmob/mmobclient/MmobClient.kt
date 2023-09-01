@@ -8,8 +8,6 @@ import android.os.Build
 import android.webkit.WebResourceRequest
 import android.webkit.WebView
 import android.webkit.WebViewClient
-import java.net.URLEncoder
-import kotlin.reflect.full.memberProperties
 
 typealias MmobView = WebView
 
@@ -19,7 +17,7 @@ class MmobClient(
     private val instanceDomain: InstanceDomain = InstanceDomain.MMOB
 ) {
     fun loadDistribution(distribution: MmobDistribution, customerInfo: MmobCustomerInfo) {
-        val data = "configuration${encodeDistributionConfiguration(distribution)}${
+        val data = "configuration${encodeDistributionConfiguration(distribution)}&${
             encodeCustomerInfo(customerInfo)
         }"
 
@@ -31,7 +29,7 @@ class MmobClient(
     }
 
     fun loadIntegration(integration: MmobIntegrationConfiguration, customerInfo: MmobCustomerInfo) {
-        val data = "&${encodeIntegrationConfiguration(integration)}${
+        val data = "&${encodeIntegrationConfiguration(integration)}&${
             encodeCustomerInfo(customerInfo)
         }"
 
@@ -54,58 +52,49 @@ class MmobClient(
     }
 
     private fun encodeIntegrationConfiguration(integration: MmobIntegrationConfiguration): String {
-        val queryStringArray = ArrayList<String>()
+        val builder = Uri.Builder()
 
-        for (prop in MmobIntegrationConfiguration::class.memberProperties) {
-            if (prop.get(integration) != null) {
-                val query =
-                    "${prop.name}=${URLEncoder.encode(prop.get(integration).toString(), "UTF-8")}"
-                queryStringArray.add(query)
-            }
-        }
+        builder.appendQueryParameter("cp_id", integration.cp_id)
+        builder.appendQueryParameter("cp_deployment_id", integration.cp_deployment_id)
+        builder.appendQueryParameter("environment", integration.environment)
+        builder.appendQueryParameter("locale", integration.locale)
+        builder.appendQueryParameter("identifier_type", "android")
+        builder.appendQueryParameter("identifier_value", context.packageName)
 
-        return queryStringArray.joinToString("&")
+        val finalUri = builder.build()
+        return finalUri.encodedQuery.toString()
     }
 
     private fun encodeDistributionConfiguration(distribution: MmobDistribution): String {
-        val queryStringArray = ArrayList<String>()
+        val configuration = distribution.distribution
+        val builder = Uri.Builder()
 
-        for (prop in MmobDistribution.Configuration::class.memberProperties) {
-            if (prop.get(distribution.distribution) != null) {
-                val query = "[${prop.name}]=${
-                    URLEncoder.encode(
-                        prop.get(distribution.distribution).toString(), "UTF-8"
-                    )
-                }"
-                queryStringArray.add(query)
-            }
-        }
+        builder.appendQueryParameter("[distribution_id]", configuration.distribution_id)
+        builder.appendQueryParameter("configuration[environment]", configuration.environment)
+        builder.appendQueryParameter("configuration[locale]", configuration.environment)
+        builder.appendQueryParameter("configuration[identifier_type]", "android")
+        builder.appendQueryParameter("configuration[identifier_value]", context.packageName)
 
-        queryStringArray.add("[identifier_type]=android")
-        queryStringArray.add("[identifier_value]=${context.packageName}")
-
-        return queryStringArray.joinToString("&configuration")
+        val finalUri = builder.build()
+        return finalUri.encodedQuery.toString()
     }
 
     private fun encodeCustomerInfo(customerInfo: MmobCustomerInfo): String {
-        val queryStringArray = ArrayList<String>()
+        val configuration = customerInfo.customerInfo
+        val builder = Uri.Builder()
 
-        for (prop in MmobCustomerInfo.Configuration::class.memberProperties) {
-            if (prop.get(customerInfo.customerInfo) != null) {
-                val query = "[${prop.name}]=${
-                    URLEncoder.encode(
-                        prop.get(customerInfo.customerInfo).toString(), "UTF-8"
-                    )
-                }"
-                queryStringArray.add(query)
+        for (property in configuration.javaClass.declaredFields) {
+            property.isAccessible = true
+            val propertyName = property.name
+            val propertyValue = property.get(configuration)
+
+            if (propertyValue != null) {
+                builder.appendQueryParameter("[${propertyName}]", propertyValue.toString())
             }
         }
 
-        if (queryStringArray.isEmpty()) {
-            return ""
-        }
-
-        return "&${queryStringArray.joinToString("&")}"
+        val finalUri = builder.build()
+        return finalUri.encodedQuery.toString()
     }
 
     private fun startWebView(mmobView: WebView, url: String, data: String) {
