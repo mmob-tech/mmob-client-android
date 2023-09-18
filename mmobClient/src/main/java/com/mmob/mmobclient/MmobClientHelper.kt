@@ -17,6 +17,7 @@ class MmobClientHelper {
         const val AFFILIATE_REDIRECT_PATH = "affiliate-redirect"
         const val MMOB_ROOT_DOMAIN = "mmob.com"
         const val EFNETWORK_ROOT_DOMAIN = "ef-network.com"
+        const val LOCAL_HOST_DOMAIN = "10.0.2.2"
 
         // Domains we want opened using native URL scheme (aka Chrome)
         val BLACKLISTED_DOMAINS = arrayOf("play.google.com", "appgallery.huawei.com")
@@ -29,7 +30,7 @@ class MmobClientHelper {
             val host = url.host
             val port = url.port
 
-            host == "10.0.2.2" && port == 3100
+            host == Constants.LOCAL_HOST_DOMAIN && port == 3100
         } catch (e: MalformedURLException) {
             false
         }
