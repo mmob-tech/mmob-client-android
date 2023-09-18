@@ -127,24 +127,27 @@ class MmobClient(
     ) {
         data class Configuration(
             val email: String? = null,
+            val title: String? = null,
             val first_name: String? = null,
             val surname: String? = null,
-            val title: String? = null,
-            val preferred_name: String? = null,
             val dob: String? = null,
-            val postcode: String? = null,
+            val phone_number: String? = null,
+            val mobile_number: String? = null,
+            val preferred_name: String? = null,
+            val passport_number: String? = null,
+            val national_insurance_number: String? = null,
             val building_number: String? = null,
             val address_1: String? = null,
             val address_2: String? = null,
             val address_3: String? = null,
             val town_city: String? = null,
-            val country: String? = null,
+            val county: String? = null,
+            val postcode: String? = null,
             val country_of_residence: String? = null,
             val nationality: String? = null,
             val gender: String? = null,
             val relationship_status: String? = null,
             val number_of_children: Number? = null,
-            val ages_of_children: Number? = null,
             val partner_first_name: String? = null,
             val partner_surname: String? = null,
             val partner_dob: String? = null,
@@ -154,10 +157,7 @@ class MmobClient(
             val number_of_cigarettes_per_week: Number? = null,
             val drinker: String? = null,
             val number_of_units_per_week: Number? = null,
-            val passport_number: String? = null,
-            val national_insurance_number: String? = null,
-            val phone_number: String? = null,
-            val mobile_number: String? = null,
+            val meta: Map<String, Any>? = null
         )
     }
 }
@@ -206,6 +206,11 @@ private class MmobViewClient(private val context: Context, private val instanceD
 
         // Instance domain matches, is not an affiliate redirect, continue within current view
         if (instanceDomainString == domain && !isAffiliateRedirect) {
+            return false
+        }
+
+        val isLocal = helper.containsLocalLink(uri)
+        if (isLocal) {
             return false
         }
 
