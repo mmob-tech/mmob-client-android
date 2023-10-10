@@ -203,7 +203,7 @@ private class MmobViewClient(private val context: Context, private val instanceD
             helper.openUriInBrowser(context, uri)
             return true
         }
-        val isPdfUrl =helper.isPdfUrl(uri)
+        val isPdfUrl = helper.isPdfUrl(uri)
         if (isPdfUrl){
             helper.openUriInBrowser(context,uri)
             return true
