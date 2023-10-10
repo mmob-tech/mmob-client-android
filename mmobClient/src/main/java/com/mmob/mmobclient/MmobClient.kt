@@ -203,6 +203,11 @@ private class MmobViewClient(private val context: Context, private val instanceD
             helper.openUriInBrowser(context, uri)
             return true
         }
+        val isPdfUrl =helper.isPdfUrl(uri)
+        if (isPdfUrl){
+            helper.openUriInBrowser(context,uri)
+            return true
+        }
 
         // Instance domain matches, is not an affiliate redirect, continue within current view
         if (instanceDomainString == domain && !isAffiliateRedirect) {

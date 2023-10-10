@@ -43,7 +43,10 @@ class MmobClientHelper {
     fun isBlacklistedDomain(uri: Uri): Boolean {
         return Constants.BLACKLISTED_DOMAINS.contains(this.getHost(uri))
     }
-
+    fun isPdfUrl(uri: Uri): Boolean {
+        val uriString = uri.toString()
+        return uriString.endsWith(".pdf")
+    }
     fun isValidUrlScheme(uri: Uri): Boolean {
         val uriString = uri.toString()
         return uriString.startsWith("http://") || uriString.startsWith("https://")
