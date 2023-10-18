@@ -111,14 +111,14 @@ class MmobClient(
     }
 
     data class MmobIntegrationConfiguration(
-        val cp_id: String, val cp_deployment_id: String, val environment: String = "production", val locale: String = "en_GB"
+        val cp_id: String, val cp_deployment_id: String, val environment: String = "production", val locale: String = "en_GB", val signature: String? = null
     )
 
     data class MmobDistribution(
         val distribution: Configuration
     ) {
         data class Configuration(
-            val distribution_id: String, val environment: String = "production", val locale: String = "en_GB"
+            val distribution_id: String, val environment: String = "production", val locale: String = "en_GB", val signature: String? = null
         )
     }
 
