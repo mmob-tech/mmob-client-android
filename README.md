@@ -53,6 +53,7 @@ class MmobViewActivity : AppCompatActivity() {
             cp_id = "YOUR_CP_ID_HERE",
             cp_deployment_id = "YOUR_CP_DEPLOYMENT_ID_HERE",
             locale = "en_GB",
+            signature = "SIGNATURE_HERE"
         )
 
         val customerInfo = MmobClient.MmobCustomerInfo(

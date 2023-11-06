@@ -58,6 +58,7 @@ class MmobClient(
         builder.appendQueryParameter("cp_deployment_id", integration.cp_deployment_id)
         builder.appendQueryParameter("environment", integration.environment)
         builder.appendQueryParameter("locale", integration.locale)
+        builder.appendQueryParameter("signature", integration.signature)
         builder.appendQueryParameter("identifier_type", "android")
         builder.appendQueryParameter("identifier_value", context.packageName)
 
@@ -71,7 +72,8 @@ class MmobClient(
 
         builder.appendQueryParameter("[distribution_id]", configuration.distribution_id)
         builder.appendQueryParameter("configuration[environment]", configuration.environment)
-        builder.appendQueryParameter("configuration[locale]", configuration.environment)
+        builder.appendQueryParameter("configuration[locale]", configuration.locale)
+        builder.appendQueryParameter("configuration[signature]", configuration.signature)
         builder.appendQueryParameter("configuration[identifier_type]", "android")
         builder.appendQueryParameter("configuration[identifier_value]", context.packageName)
 
@@ -111,14 +113,14 @@ class MmobClient(
     }
 
     data class MmobIntegrationConfiguration(
-        val cp_id: String, val cp_deployment_id: String, val environment: String = "production", val locale: String = "en_GB"
+        val cp_id: String, val cp_deployment_id: String, val environment: String = "production", val locale: String = "en_GB", val signature: String? = null
     )
 
     data class MmobDistribution(
         val distribution: Configuration
     ) {
         data class Configuration(
-            val distribution_id: String, val environment: String = "production", val locale: String = "en_GB"
+            val distribution_id: String, val environment: String = "production", val locale: String = "en_GB", val signature: String? = null
         )
     }
 
